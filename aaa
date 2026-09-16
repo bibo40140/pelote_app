@@ -1,0 +1,6 @@
+select public.bootstrap_first_admin(
+  '98ad7393-f020-4b3a-98b5-f8431e21685a',
+  'Fabien',
+  'HICAUBER',
+  'fabien.hicauber@gmail.com'
+);
