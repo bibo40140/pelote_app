@@ -18,3 +18,7 @@ build/
 # OS
 .DS_Store
 Thumbs.db
+
+# Supabase local
+supabase/.branches
+supabase/.temp
