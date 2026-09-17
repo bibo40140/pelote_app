@@ -3,6 +3,7 @@ import { NavLink } from 'react-router-dom'
 const links = [
   ['Joueurs', '/admin/players'],
   ['Équipes', '/admin/teams'],
+  ['Vue sportive', '/admin/sport-overview'],
   ['Saisons', '/admin/seasons'],
   ['Disciplines', '/admin/disciplines'],
   ['Séries', '/admin/series'],

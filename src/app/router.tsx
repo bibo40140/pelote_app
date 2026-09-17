@@ -14,6 +14,7 @@ import { SeriesPage } from '../features/admin/pages/SeriesPage'
 import { PlayersPage } from '../features/players/pages/PlayersPage'
 import { PlayerDisciplinesPage } from '../features/players/pages/PlayerDisciplinesPage'
 import { TeamsPage } from '../features/teams/pages/TeamsPage'
+import { SportOverviewPage } from '../features/sportOverview/pages/SportOverviewPage'
 
 export const router = createBrowserRouter([
   {
@@ -31,6 +32,7 @@ export const router = createBrowserRouter([
               { path: 'admin/players', element: <PlayersPage /> },
               { path: 'admin/players/:playerId/disciplines', element: <PlayerDisciplinesPage /> },
               { path: 'admin/teams', element: <TeamsPage /> },
+              { path: 'admin/sport-overview', element: <SportOverviewPage /> },
               { path: 'admin/seasons', element: <SeasonsPage /> },
               { path: 'admin/disciplines', element: <DisciplinesPage /> },
               { path: 'admin/series', element: <SeriesPage /> },
