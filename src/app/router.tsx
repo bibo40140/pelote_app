@@ -15,6 +15,10 @@ import { PlayersPage } from '../features/players/pages/PlayersPage'
 import { PlayerDisciplinesPage } from '../features/players/pages/PlayerDisciplinesPage'
 import { TeamsPage } from '../features/teams/pages/TeamsPage'
 import { SportOverviewPage } from '../features/sportOverview/pages/SportOverviewPage'
+import { TrainingPeriodsPage } from '../features/training-periods/pages/TrainingPeriodsPage'
+import { TrainingSlotsPage } from '../features/training-slots/pages/TrainingSlotsPage'
+import { AvailabilitiesPage } from '../features/availabilities/pages/AvailabilitiesPage'
+import { AvailabilityExceptionsPage } from '../features/availability-exceptions/pages/AvailabilityExceptionsPage'
 
 export const router = createBrowserRouter([
   {
@@ -26,6 +30,8 @@ export const router = createBrowserRouter([
         children: [
           { index: true, element: <DashboardPage /> },
           { path: 'profil', element: <ProfilePage /> },
+          { path: 'disponibilites', element: <AvailabilitiesPage /> },
+          { path: 'exceptions', element: <AvailabilityExceptionsPage /> },
           {
             element: <AdminRoute />,
             children: [
@@ -33,6 +39,8 @@ export const router = createBrowserRouter([
               { path: 'admin/players/:playerId/disciplines', element: <PlayerDisciplinesPage /> },
               { path: 'admin/teams', element: <TeamsPage /> },
               { path: 'admin/sport-overview', element: <SportOverviewPage /> },
+              { path: 'admin/training-periods', element: <TrainingPeriodsPage /> },
+              { path: 'admin/training-slots', element: <TrainingSlotsPage /> },
               { path: 'admin/seasons', element: <SeasonsPage /> },
               { path: 'admin/disciplines', element: <DisciplinesPage /> },
               { path: 'admin/series', element: <SeriesPage /> },

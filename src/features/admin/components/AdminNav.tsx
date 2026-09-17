@@ -4,6 +4,8 @@ const links = [
   ['Joueurs', '/admin/players'],
   ['Équipes', '/admin/teams'],
   ['Vue sportive', '/admin/sport-overview'],
+  ['Périodes', '/admin/training-periods'],
+  ['Créneaux', '/admin/training-slots'],
   ['Saisons', '/admin/seasons'],
   ['Disciplines', '/admin/disciplines'],
   ['Séries', '/admin/series'],

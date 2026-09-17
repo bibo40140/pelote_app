@@ -20,6 +20,9 @@ export function AppLayout() {
             <Link className="text-sm font-medium text-stone-600 hover:text-teal-800" to="/profil">
               Profil
             </Link>
+            <Link className="text-sm font-medium text-stone-600 hover:text-teal-800" to="/disponibilites">
+              Mes disponibilités
+            </Link>
             <Link className="text-sm font-medium text-stone-600 hover:text-teal-800" to="/admin/seasons">
               Administration
             </Link>
