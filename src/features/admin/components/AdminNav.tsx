@@ -1,6 +1,8 @@
 import { NavLink } from 'react-router-dom'
 
 const links = [
+  ['Joueurs', '/admin/players'],
+  ['Équipes', '/admin/teams'],
   ['Saisons', '/admin/seasons'],
   ['Disciplines', '/admin/disciplines'],
   ['Séries', '/admin/series'],

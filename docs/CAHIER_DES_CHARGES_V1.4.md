@@ -227,7 +227,7 @@ Un joueur possède :
 - des préférences de notification ;
 - des dates de création et de modification.
 
-Un joueur peut exister sans avoir encore activé son compte. Il peut pratiquer plusieurs disciplines et avoir une série différente selon la discipline et la saison.
+Un joueur peut exister sans avoir encore activé son compte. Il peut pratiquer plusieurs disciplines et avoir une série différente selon la pratique (discipline et type d'installation) et la saison.
 
 ## 8.2 Rôles
 
@@ -352,6 +352,27 @@ Une discipline peut être compatible avec plusieurs types d'installation.
 discipline_installation_types
 ```
 
+## 12.4 Pratique sportive
+
+Une pratique sportive est le couple :
+
+```text
+discipline_id + installation_type_id
+```
+
+Le type d'installation seul ne constitue pas une pratique. On ne pratique pas simplement le Trinquet ou le Mur à gauche.
+
+On pratique par exemple :
+
+- la Gomme pleine en Trinquet ;
+- la Gomme creuse en Trinquet ;
+- la Gomme pleine en Mur à gauche ;
+- la Gomme creuse en Mur à gauche.
+
+Pour une même saison, un joueur peut avoir une inscription et une série différentes dans chacune de ces pratiques.
+
+La table `discipline_installation_types` reste la source des couples discipline / type d'installation autorisés. Aucune table `practice` dédiée n'est créée en V1 ; les inscriptions, les équipes et les compétitions référencent directement ce couple.
+
 ---
 
 # 13. Séries et compatibilités
@@ -377,9 +398,9 @@ series_compatibilities
 
 ---
 
-# 14. Inscription d'un joueur à une discipline
+# 14. Inscription d'un joueur à une pratique
 
-La série dépend du joueur, de la discipline et de la saison.
+La série dépend du joueur, de la pratique (discipline et type d'installation) et de la saison.
 
 ```text
 player_disciplines
@@ -390,17 +411,18 @@ player_disciplines
 | id | Identifiant |
 | player_id | Joueur |
 | discipline_id | Discipline |
+| installation_type_id | Type d'installation |
 | season_id | Saison |
 | series_id | Série |
 | active | Active ou inactive |
 
-Une seule inscription active identique est autorisée pour un joueur, une discipline et une saison.
+Une seule inscription active identique est autorisée pour un joueur, une pratique et une saison. Un joueur peut donc avoir, pour une même saison, plusieurs séries dans une même discipline si les types d'installation diffèrent.
 
 ---
 
 # 15. Équipes
 
-Une équipe représente normalement une paire permanente de deux joueurs, liée à une discipline, une saison et une série de référence choisie par l'administrateur.
+Une équipe représente normalement une paire permanente de deux joueurs, liée à une pratique (discipline et type d'installation), une saison et une série de référence choisie par l'administrateur.
 
 ## 15.1 Statuts
 
@@ -432,10 +454,10 @@ L'équipe n'est plus utilisée mais reste dans l'historique.
 ## 15.2 Règles
 
 1. Une équipe `ACTIVE` possède exactement deux membres actifs.
-2. Une équipe appartient à une discipline et une saison.
+2. Une équipe appartient à une pratique (discipline et type d'installation) et une saison.
 3. Sa série est choisie manuellement.
-4. Les membres sont inscrits dans la discipline et la saison.
-5. Un joueur appartient au maximum à une équipe active pour une même discipline et saison.
+4. Les membres sont inscrits dans la pratique (discipline et type d'installation) et la saison.
+5. Un joueur appartient au maximum à une équipe active pour une même pratique (discipline et type d'installation) et saison.
 6. Une composition ponctuelle ne crée aucune équipe permanente.
 7. Le départ ou la désactivation d'un membre ne supprime pas l'équipe ; l'équipe passe à `INCOMPLETE` si nécessaire.
 
@@ -644,7 +666,7 @@ Un entraînement comporte normalement quatre joueurs, soit deux équipes de deux
 
 Contraintes automatiques :
 
-1. discipline correspondante ;
+1. pratique correspondante (discipline et type d'installation de l'événement) ;
 2. disponibilité positive ;
 3. aucun chevauchement horaire, y compris entre disciplines ;
 4. compatibilité des séries ;
@@ -784,7 +806,7 @@ Il s'agit d'une optimisation sous contraintes, exécutée sur toute la période.
 ## 24.1 Contraintes dures
 
 - quatre joueurs par événement automatique ;
-- même discipline ;
+- même pratique (discipline et type d'installation) ;
 - disponibilité calculée positive ;
 - absence de chevauchement, toutes disciplines confondues ;
 - aucun doublon ;
@@ -853,7 +875,7 @@ Règles :
 1. Seul un joueur affecté peut demander un remplacement.
 2. Le joueur initial reste affecté jusqu'à approbation.
 3. L'administrateur choisit et valide le remplaçant.
-4. La discipline et la disponibilité du remplaçant sont vérifiées.
+4. La pratique (discipline et type d'installation de l'événement), la saison et la disponibilité du remplaçant sont vérifiées.
 5. Les dérogations produisent un avertissement.
 6. La composition ponctuelle ne crée aucune équipe.
 7. La décision est tracée.
@@ -875,6 +897,7 @@ CANCELLED
 
 Une équipe associée à une compétition
 doit appartenir à la même saison
+et à la même pratique (discipline et type d'installation)
 que la compétition.
 
 Exemple :
@@ -918,7 +941,7 @@ Compétition terminée et conservée dans l'historique.
 
 Compétition annulée et conservée.
 
-Une compétition est liée à une saison, une discipline, éventuellement une série, et peut concerner plusieurs équipes.
+Une compétition est liée à une saison, une pratique (discipline et type d'installation), éventuellement une série, et peut concerner plusieurs équipes. La V1 considère qu'une compétition correspond à une seule pratique ; la question de compétitions regroupant plusieurs types d'installation pour une même discipline reste `TODO / À DÉFINIR`.
 
 ```text
 competitions
@@ -1220,8 +1243,8 @@ Le schéma définitif, les types SQL, contraintes, index, clés étrangères et 
 
 ## 35.1 Unicité
 
-- une inscription active par joueur, discipline et saison ;
-- une équipe active maximum par joueur, discipline et saison ;
+- une inscription active par joueur, pratique (discipline et type d'installation) et saison ;
+- une équipe active maximum par joueur, pratique (discipline et type d'installation) et saison ;
 - une réponse par joueur et créneau ;
 - une affectation par joueur et événement ;
 - une seule version publiée par période ;
@@ -1234,7 +1257,7 @@ Le schéma définitif, les types SQL, contraintes, index, clés étrangères et 
 - événement compris dans sa période ;
 - équipe active avec deux membres ;
 - équipe incomplète exclue comme équipe complète automatique ;
-- joueur rattaché à la bonne discipline et saison ;
+- joueur rattaché à la bonne pratique (discipline et type d'installation) et saison ;
 - aucun chevauchement d'affectation ;
 - cohérence compétition, saison et équipe ;
 - dernier administrateur protégé.
@@ -1346,7 +1369,7 @@ Un administrateur doit pouvoir :
 | D-16 | Nouvelle publication archive l'ancienne atomiquement | VALIDÉ |
 | D-17 | Remplacement validé par un administrateur | VALIDÉ |
 | D-18 | Composition ponctuelle distincte d'une équipe | VALIDÉ |
-| D-19 | Une équipe active maximum par joueur, discipline et saison | VALIDÉ |
+| D-19 | Une équipe active maximum par joueur, pratique (discipline et type d'installation) et saison | VALIDÉ |
 | D-20 | Statuts équipe ACTIVE, INCOMPLETE, ARCHIVED | VALIDÉ |
 | D-21 | Joueur désactivé exclu des nouvelles propositions | VALIDÉ |
 | D-22 | Historique du joueur désactivé conservé | VALIDÉ |
@@ -1362,6 +1385,10 @@ Un administrateur doit pouvoir :
 | D-32 | Une affectation appartient à une version de planning | VALIDÉ |
 | D-33 | Une équipe de compétition doit appartenir à la même saison | VALIDÉ |
 | D-34 | notifications et notification_logs ont des responsabilités distinctes | VALIDÉ |
+| D-35 | La pratique sportive est définie par le couple discipline et type d'installation | VALIDÉ |
+| D-36 | Un joueur peut avoir, pour une même saison, plusieurs séries dans une même discipline si les types d'installation diffèrent | VALIDÉ |
+| D-37 | Une équipe appartient à une pratique et une saison | VALIDÉ |
+| D-38 | Une compétition appartient à une pratique et une saison en V1 | VALIDÉ |
 
 ---
 
@@ -1384,7 +1411,8 @@ TODO / À DÉFINIR
 - adversaire ;
 - domicile ou extérieur ;
 - report ;
-- scores et classements futurs.
+- scores et classements futurs ;
+- certaines compétitions peuvent-elles regrouper plusieurs types d'installation pour une même discipline ?
 
 ## Notifications
 

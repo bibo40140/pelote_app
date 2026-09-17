@@ -169,7 +169,7 @@ Administrateurs uniquement.
 #### Archivage
 Administrateurs uniquement.
 #### Restrictions
-Un joueur ne choisit ni ne modifie sa série, sa discipline ou sa saison. Les inscriptions inactives restent visibles à leur propriétaire pour l'historique.
+Un joueur ne choisit ni ne modifie sa série, sa pratique (discipline et type d'installation) ou sa saison. Les inscriptions inactives restent visibles à leur propriétaire pour l'historique.
 
 ### `teams`
 #### Lecture
@@ -181,7 +181,7 @@ Administrateurs uniquement.
 #### Archivage
 Administrateurs uniquement.
 #### Restrictions
-Une équipe ne peut pas être créée ou modifiée par un joueur. La création, régularisation et archivage appliquent les contraintes de membres et l'audit.
+Une équipe ne peut pas être créée ou modifiée par un joueur. La création, régularisation et archivage appliquent les contraintes de membres (pratique et saison correspondantes) et l'audit.
 
 ### `team_members`
 #### Lecture
@@ -193,7 +193,7 @@ Administrateurs uniquement.
 #### Archivage
 Administrateurs uniquement, par clôture d'appartenance ou désactivation.
 #### Restrictions
-Le joueur ne peut ni se joindre ni se retirer lui-même d'une équipe. La lecture joueur est limitée aux données strictement nécessaires à l'affichage des équipes ; les coordonnées et données personnelles non nécessaires d'autres membres ne sont pas exposées. L'historique des membres est conservé.
+Le joueur ne peut ni se joindre ni se retirer lui-même d'une équipe. La lecture joueur est limitée aux données strictement nécessaires à l'affichage des équipes ; les coordonnées et données personnelles non nécessaires d'autres membres ne sont pas exposées. La cohérence d'un membre avec la pratique (discipline et type d'installation) et la saison de l'équipe est vérifiée via `player_disciplines`. L'historique des membres est conservé.
 
 ### `training_periods`
 #### Lecture
@@ -217,7 +217,7 @@ Administrateurs uniquement.
 #### Archivage
 Administrateurs uniquement.
 #### Restrictions
-Un joueur n'accède pas aux créneaux de brouillons ou de périodes non ouvertes qui ne le concernent pas.
+Un joueur n'accède pas aux créneaux de brouillons ou de périodes non ouvertes qui ne le concernent pas. L'éligibilité d'un joueur à un créneau doit tenir compte de la pratique (discipline et type d'installation déduit de `installations.installation_type_id`) et de la saison, et non de la seule discipline.
 
 ### `training_events`
 #### Lecture
@@ -229,7 +229,7 @@ Administrateurs uniquement.
 #### Archivage
 Administrateurs uniquement, par statuts `CANCELLED` ou `COMPLETED`.
 #### Restrictions
-Les événements `DRAFT` ne sont jamais lisibles par les joueurs. La lecture du planning publié n'ouvre pas l'accès aux disponibilités, exceptions ou autres données personnelles d'autres joueurs.
+Les événements `DRAFT` ne sont jamais lisibles par les joueurs. La lecture du planning publié n'ouvre pas l'accès aux disponibilités, exceptions ou autres données personnelles d'autres joueurs. L'éligibilité d'un joueur à un événement doit tenir compte de la pratique (discipline et type d'installation) et de la saison, et non de la seule discipline.
 
 ### `planning_versions`
 #### Lecture
@@ -289,7 +289,7 @@ Administrateurs uniquement.
 #### Archivage
 Administrateurs uniquement, par statuts `COMPLETED` ou `CANCELLED`.
 #### Restrictions
-Les compétitions `DRAFT` sont invisibles aux joueurs.
+Les compétitions `DRAFT` sont invisibles aux joueurs. Une compétition appartient à une pratique (discipline et type d'installation) et une saison ; en V1, `installation_type_id` est obligatoire.
 
 ### `competition_teams`
 #### Lecture
@@ -301,7 +301,7 @@ Non applicable ; liaison créée ou retirée par une opération administrative c
 #### Archivage
 Non applicable ; la conservation historique suit celle de la compétition.
 #### Restrictions
-La liaison doit vérifier saison et discipline. Un joueur ne peut engager ou retirer aucune équipe.
+La liaison doit vérifier saison, discipline et type d'installation (pratique). Un joueur ne peut engager ou retirer aucune équipe.
 
 ### `competition_matches`
 #### Lecture
@@ -337,7 +337,7 @@ Fonction sécurisée ou administrateur dans le cadre d'une annulation tracée un
 #### Archivage
 Administrateurs ou fonction sécurisée, par `cancelled_at`.
 #### Restrictions
-Le joueur ne peut jamais se désigner comme remplaçant ou modifier une décision. Les contrôles de disponibilité, discipline et conflit sont exécutés côté base.
+Le joueur ne peut jamais se désigner comme remplaçant ou modifier une décision. Les contrôles de disponibilité, pratique (discipline et type d'installation) et conflit sont exécutés côté base.
 
 ### `notifications`
 #### Lecture
@@ -404,8 +404,8 @@ Les brouillons, validations intermédiaires, résultats de contrôles, décision
 - Création ou correction administrative d'inscriptions, disponibilités et exceptions avec audit.
 - Génération d'événements et création ou modification d'affectations avec vérification de disponibilité, inscription, compatibilité, doublon et conflit horaire.
 - Validation et publication atomique d'une version de planning, incluant l'archivage de l'ancienne publication, l'audit et la préparation des notifications.
-- Validation ou annulation d'un remplacement, incluant les contrôles de l'affectation initiale, du remplaçant, de la disponibilité et des conflits.
-- Création ou modification d'une compétition avec ses équipes, en garantissant cohérence de saison, discipline et série.
+- Validation ou annulation d'un remplacement, incluant les contrôles de l'affectation initiale, du remplaçant (pratique et saison), de la disponibilité et des conflits.
+- Création ou modification d'une compétition avec ses équipes, en garantissant cohérence de saison, discipline, type d'installation et série.
 - Création de notifications, réservation des envois, écriture de `notification_logs` et mise à jour des états techniques.
 - Écriture immuable et centralisée des `audit_logs`.
 
